@@ -1,0 +1,120 @@
+餐E评:
+	
+	>消费规模
+	
+		1:消费金额击败了XX%的本市其他商圈(cbd_amt_rank)
+		2:消费频次击败了XX%的本市其他商圈(cbd_cnt_rank)
+		3:餐饮金额击败了XX%的本市其他商圈(cater_amt_pct)
+		4:餐饮频次击败了XX%的本市其他商圈(cater_cnt_pct)
+		
+		算法:
+		
+			*根据当前商圈的ID与银联数据(dc_meal_unionpay_data)中的最大月份(year_month),
+				查询出银联数据(dc_meal_unionpay_data)中的商圈金额排名(cbd_amt_rank),
+				商圈笔数排名(cbd_cnt_rank),餐饮金额排名(cater_amt_pct),餐饮笔数排名(cater_cnt_pct)
+				
+		1>总体消费趋势(消费金额...,消费频次...)
+		2>餐饮消费趋势(餐饮金额...,餐饮频次...)
+		
+			算法:
+			
+				*maxTime = 根据商圈ID查询银联(dc_meal_unionpay_data)中的最大时间(year_month)
+				*起始时间(startTime) = 根据maxTime - 12个月, 结束时间endTime = maxTime;
+				*根据商圈ID & startTime & endTime查询银联(dc_meal_unionpay_data)中12个月的时间(year_month),
+					消费金额(cbd_amt_rank),消费频次(cbd_cnt_rank),餐饮金额(cater_amt_pct),餐饮频次(cater_cnt_pct)
+					
+					
+					
+	>关联生态
+		
+		1:关联生态(有问题:本商圈有的关联品牌有颜色, 没有的关联品牌用灰色? 怎么区分关联与不关联)
+			
+			算法:
+				A:根据当前用户ID查询品牌(m_meal_cfg_brand)的城市(shop_city)与竞品ID(competitor_id)
+				B:查询核心品牌的关联品牌:   
+
+					SELECT
+						*
+					FROM
+						m_meal_centre_relate_brandtoptwenty b		核心品牌的关联品牌前20
+					WHERE
+						b.city = 品牌中的城市		
+					AND b.centre_brand(核心品牌) = 
+					(
+						SELECT
+							f.brand_name							品牌名称
+						FROM
+							m_meal_regin_brand_force f				品牌力
+						WHERE
+							f.id = A.competitorId(竞品ID)
+					)
+	
+		2:生态详情
+			
+			算法:
+				A:根据当前用户ID查询品牌(m_meal_cfg_brand)的城市(shop_city)与餐饮类型(restaurant_type)和品牌价格区间(priceRange)
+				B:生态列表
+					SELECT
+						s.id,						店铺--ID
+						s.ca_shop_name,				店铺--名称
+						s.ca_shop_styles,			店铺--菜系
+						s.ca_shop_avgprice			店铺--平均价
+					FROM
+						dc_meal_shops s				店铺
+					WHERE
+						s.business_district_id(商圈ID) = 当前商圈ID
+					AND s.ca_shop_styles = 品类筛选菜系
+					AND s.ca_shop_avgprice BETWEEN A.priceRange-min AND A.priceRange-max
+					ORDER BY  						排序
+						s.ca_shop_avgprice ASC      排序的方式
+				
+			
+				
+	
+	>火爆指数
+	
+		1:火爆指数
+		
+			算法:
+			
+				A:根据当前用户ID查询品牌(m_meal_cfg_brand)的城市(shop_city)与餐饮类型(restaurant_type)和品牌价格区间(priceRange)
+		
+			1>高于本市平均火爆度XX%----餐饮类型
+					
+				SELECT
+					s.hot_inx					火爆指数
+				FROM
+					m_meal_bis_style_inx s		商圈菜系火爆度&火爆指数详情
+				WHERE
+					s.business_district_id = 商圈ID
+				AND s.meal_style = A.restaurant_type(菜系)
+				
+			2>低于本市平均火爆度XX%----价格区间
+			
+				SELECT
+					p.hot_inx						火爆指数
+				FROM
+					m_meal_bis_pricearea_inx p		商圈菜系火爆度&火爆指数详情
+				WHERE
+					p.business_district_id = 商圈ID
+				AND p.price_area = 品牌的价格
+			
+			3>高于本市平均火爆度XX%----价格区间&餐饮类型
+				
+				SELECT
+					sp.hot_inx								火爆指数
+				FROM
+					m_meal_bis_style_pricearea_inx sp		商圈价格区间@菜系火爆度&火爆指数详情
+				WHERE
+					sp.business_district_id = 商圈ID
+				AND sp.price_area = 品牌的价格 
+				AND sp.meal_style = 品牌菜系
+		
+			
+	
+		2:火爆指数详情
+		
+			算法:
+				
+				
+				
