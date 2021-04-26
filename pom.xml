@@ -46,7 +46,7 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <mysql-connector-java.version>6.0.6</mysql-connector-java.version>
-        <commons-io.version>2.5</commons-io.version>
+        <commons-io.version>2.8.0.0</commons-io.version>
         <jodd-bean.version>3.8.6</jodd-bean.version>
         <commons-lang3.version>3.6</commons-lang3.version>
         <fastjson.version>1.2.24</fastjson.version>
@@ -151,7 +151,7 @@
             <dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
-                <version>${commons-io.version}.0</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <!--Excel-POI-->
             <dependency>
