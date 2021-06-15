@@ -58,7 +58,7 @@
         <super-csv.version>2.4.0</super-csv.version>
         <poi-excelant.version>3.16</poi-excelant.version>
         <itext7-core.version>7.0.3</itext7-core.version>
-        <pdfbox.version>2.0.4</pdfbox.version>
+        <pdfbox.version>2.0.24</pdfbox.version>
         <jsch.version>0.1.54</jsch.version>
         <slf4j-api.version>1.7.25</slf4j-api.version>
         <mybatis-spring-boot-starter.version>1.3.1</mybatis-spring-boot-starter.version>
